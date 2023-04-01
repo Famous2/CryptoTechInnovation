@@ -1,0 +1,41 @@
+# Deploy your CryptoTechInnovation landing page to GitHub Pages
+name: Deploy CryptoTechInnovation to Pages
+
+# Define the events that will trigger the workflow
+on:
+  push:
+    branches: [main] # Set the branch you want to deploy from
+  workflow_dispatch: # Allow manual deployment from the Actions tab
+
+# Set permissions for GitHub Pages deployment
+permissions:
+  contents: read
+  pages: write
+
+# Define concurrency settings
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest # Choose the runner environment you want to use
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Build your landing page
+        run: |
+          # Add your build commands here to generate your static site
+          # Example: npm run build
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }} # Required
+          publish_dir: ./public # Set the directory to publish
+          cname: crypto-tech-innovation.com # Set your custom domain name (if you have one)
+
+      - name: Success message
+        if: success()
+        run: echo "Your CryptoTechInnovation landing page has been successfully deployed!"
